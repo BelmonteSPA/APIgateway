@@ -1,0 +1,35 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: ms-auth
+              uri: ${MS_AUTH_URL:http://localhost:8081}
+              predicates:
+                - Path=/api/v1/auth/**, /api/v1/usuarios/**
+
+            - id: ms-pasajeros
+              uri: ${MS_PASAJEROS_URL:http://localhost:8082}
+              predicates:
+                - Path=/api/v1/pasajeros/**
+
+            - id: ms-conductores
+              uri: ${MS_CONDUCTORES_URL:http://localhost:8083}
+              predicates:
+                - Path=/api/v1/conductores/**
+
+            - id: ms-viajes
+              uri: ${MS_VIAJES_URL:http://localhost:8084}
+              predicates:
+                - Path=/api/v1/viajes/**
+
+jwt:
+  # debe ser la misma clave que usa ms-auth para firmar los tokens (variable JWT_SECRET)
+  secret: ${JWT_SECRET:belmonte-dev-secret-cambiar-en-produccion-0123456789abcdef}
